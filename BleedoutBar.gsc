@@ -49,7 +49,6 @@ PlayerDowned()
         self waittill("player_downed");
         self.BleedoutBar_r = true;
         self thread BleedoutBar();
-        self iPrintLn("working?");
         self waittill_any("player_revived","bled_out", "death");
         
     }
