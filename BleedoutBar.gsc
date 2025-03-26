@@ -85,7 +85,7 @@ Bleedout_revived_ornot()
         {
             self.BleedoutBar_r = false;
             self.bleedingout_bar destroyElem();
-            self.bleedingout_text destroy
+            self.bleedingout_text destroy();
         }
 
 }
