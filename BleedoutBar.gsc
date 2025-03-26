@@ -43,13 +43,15 @@ PlayerDowned()
 {
     self endon("end_game");
     self endon("disconnect");
+    
     for(;;)
     {
         self waittill("player_downed");
         self.BleedoutBar_r = true;
         self thread BleedoutBar();
+        self iPrintLn("working?");
         self waittill_any("player_revived","bled_out", "death");
-        wait 1;
+        
     }
 }
 
@@ -57,7 +59,6 @@ BleedoutBar()
 {
     self endon("end_game");
     self endon("disconnect");
-    flag_wait( "initial_blackscreen_passed" );
     //Creating the bleedout bar
     self.bleedingout_bar = createPrimaryProgressBar();
     self.bleedingout_bar setPoint("CENTER", "CENTER", 0, 120);
@@ -67,11 +68,11 @@ BleedoutBar()
     self.bleedingout_bar.archived = 1;
     self.bleedingout_text = createFontString("small", 1);
     self.bleedingout_text setPoint("CENTER", "CENTER", 0,100);
+    self thread Bleedout_revived_ornot();
     while(self.BleedoutBar_r == true)
         {
             self.bleedingout_bar updatebar(int(self.bleedout_time) / int(getdvarint("player_laststandBleedouttime")));
             self.bleedingout_text settext("Bleeding out in ^1" + int(self.bleedout_time));
-            self thread Bleedout_revived_ornot();
             wait 0.05;
         }
 }
@@ -81,11 +82,7 @@ Bleedout_revived_ornot()
     self endon("end_game");
     self endon("disconnect");
     self waittill_any("player_revived","bled_out", "death");
-    if ("player_revived" || "bled_out" || "death")
-        {
             self.BleedoutBar_r = false;
             self.bleedingout_bar destroyElem();
             self.bleedingout_text destroy();
-        }
-
 }
